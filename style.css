@@ -1,0 +1,290 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 100%;
+  min-height: 100vh;
+  line-height: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#minesweeper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+#edge-top {
+  width: 100%;
+  height: 20px;
+  background-image: url(./images/edge_top.png);
+  background-size: 100% 20px;
+}
+.top_wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+#edge-top-left {
+  width: 14px;
+  height: 35px;
+  flex: 1 1 auto;
+  background-image: url(./images/edge_top_left.png);
+  background-size: 14px 35px;
+}
+#edge-top-right {
+  width: 19.5px;
+  height: 35px;
+  flex: 1 1 auto;
+  background-image: url(./images/edge_top_right.png);
+  background-size: 19.5px 35px;
+}
+#top {
+  padding: 4px 6px 5px;
+  /* width: 100%; */
+  flex: 999 1 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: silver;
+}
+#edge-center {
+  width: 100%;
+  height: 20px;
+  background-image: url(./images/edge_center.png);
+  background-size: 100% 20px;
+}
+#edge-board-left {
+  width: 14px;
+  height: 384px;
+  flex: 1 1 auto;
+  background-image: url(./images/edge_board_left.png);
+  background-size: 14px 384px;
+}
+#edge-board-right {
+  width: 19px;
+  height: 384px;
+  flex: 1 1 auto;
+  background-image: url(./images/edge_board_right.png);
+  background-size: 19px 384px;
+}
+#edge-bottom {
+  width: 100%;
+  height: 20px;
+  background-image: url(./images/edge_bottom.png);
+  background-size: 100% 20px;
+}
+.top__inner {
+  flex: 1 1 auto;
+  display: block;
+}
+
+.counterMines {
+  height: 23px;
+  display: block;
+  float: left !important;
+  align-items: center;
+}
+
+.smile {
+  width: 26px;
+  height: 26px;
+  margin: auto;
+  cursor: pointer;
+}
+
+.smile.default {
+  background-image: url(./images/smile_default.png);
+  background-size: cover;
+}
+
+.smile.default-down {
+  background-image: url(./images/smile_default_down.png);
+  background-size: cover;
+}
+
+.smile.lose {
+  background-image: url(./images/smile_lose.png);
+  background-size: cover;
+}
+
+.smile.win {
+  background-image: url(./images/smile_win.png);
+  background-size: cover;
+}
+
+.smile.scare {
+  background-image: url(./images/smile_scare.png);
+  background-size: cover;
+}
+
+.stopwatch {
+  height: 23px;
+  float: right !important;
+}
+
+.number {
+  width: 13px;
+  height: 23px;
+  float: left !important;
+}
+
+.num0 {
+  background-image: url(./images/number_null.png);
+  background-size: cover;
+}
+
+.num1 {
+  background-image: url(./images/number_one.png);
+  background-size: cover;
+}
+
+.num2 {
+  background-image: url(./images/number_two.png);
+  background-size: cover;
+}
+
+.num3 {
+  background-image: url(./images/number_three.png);
+  background-size: cover;
+}
+
+.num4 {
+  background-image: url(./images/number_four.png);
+  background-size: cover;
+}
+
+.num5 {
+  background-image: url(./images/number_five.png);
+  background-size: cover;
+}
+
+.num6 {
+  background-image: url(./images/number_six.png);
+  background-size: cover;
+}
+
+.num7 {
+  background-image: url(./images/number_seven.png);
+  background-size: cover;
+}
+
+.num8 {
+  background-image: url(./images/number_eight.png);
+  background-size: cover;
+}
+
+.num9 {
+  background-image: url(./images/number_nine.png);
+  background-size: cover;
+}
+
+.num- {
+  background-image: url(./images/number_minus.png);
+  background-size: cover;
+}
+
+.board_wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+#board {
+  flex: 999 1 auto;
+  display: grid;
+  grid-template-columns: repeat(16, 24px);
+}
+
+.cell {
+  /* border: 1px solid #000; */
+  width: 24px;
+  height: 24px;
+  /* display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold; */
+  cursor: pointer;
+}
+
+.cell.closed {
+  background-image: url(./images/closed.png);
+  background-size: cover;
+}
+
+.cell.opened {
+  background-image: url(./images/opened.png);
+  background-size: cover;
+}
+
+.cell.min_reveal {
+  background-image: url(./images/min_reveal.png);
+  background-size: cover;
+}
+
+.cell.min_explosion {
+  background-image: url(./images/min_explosion.png);
+  background-size: cover;
+}
+
+.cell.min_error {
+  background-image: url(./images/min_error.png);
+  background-size: cover;
+}
+
+.cell.flag_true {
+  background-image: url(./images/flag.png);
+  background-size: cover;
+}
+
+.cell.question {
+  background-image: url(./images/question.png);
+  background-size: cover;
+}
+
+.cell.number_mines_1 {
+  background-image: url(./images/number_mines_one.png);
+  background-size: contain;
+}
+
+.cell.number_mines_2 {
+  background-image: url(./images/number_mines_two.png);
+  background-size: contain;
+}
+
+.cell.number_mines_3 {
+  background-image: url(./images/number_mines_three.png);
+  background-size: contain;
+}
+
+.cell.number_mines_4 {
+  background-image: url(./images/number_mines_four.png);
+  background-size: contain;
+}
+
+.cell.number_mines_5 {
+  background-image: url(./images/number_mines_five.png);
+  background-size: contain;
+}
+
+.cell.number_mines_6 {
+  background-image: url(./images/number_mines_six.png);
+  background-size: contain;
+}
+
+.cell.number_mines_7 {
+  background-image: url(./images/number_mines_seven.png);
+  background-size: contain;
+}
+
+.cell.number_mines_8 {
+  background-image: url(./images/number_mines_eight.png);
+  background-size: contain;
+}
