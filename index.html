@@ -6,17 +6,75 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Сапёр</title>
+    <link rel="icon" href="./images/min_reveal.png">
     <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Montserrat:wght@400;700&display=swap">
     <script defer src="./script.js"></script>
 </head>
 
 <body>
+
+    <header class="header">
+
+        <div class="header__logo">
+            "Сапёр"
+        </div>
+
+    </header>
+
+    <div class="left-side">
+
+        <div class="description">
+            "Сапёр" (Minesweeper) - игра-головоломка.<br><br>
+            Игра представляет из себя игровое поле разделённое на квадраты (ячейки), некоторые из которых
+            "заминированы".<br>
+            Целью игры является открытие всех ячеек, не содержащих мины. Открыв ячейку с миной, игрок
+            проигрывает.<br><br>
+            Мины расставляются после первого хода. Если под открытой ячейкой мины нет, то в ней появляется число,
+            показывающее, сколько ячеек, соседствующих с только что открытой, «заминировано». Если под ячейками нет мин
+            и цифры, то открывается некоторая «не заминированная» область до ячеек, в которых есть цифры. Неоткрытые
+            ячейки игрок может пометить "флажком" (правый клик мыши по ячейке), чтобы случайно не открыть их. Открыв все
+            «не заминированные» ячейки, игрок выигрывает.<br><br>
+            Нажатие по смайлику перезапускает игру. Слева счётчик мин, справа таймер.
+        </div>
+
+    </div>
+
+    <div class="right-side">
+
+        <div class="right-side__tittle">
+            Сложность поля:
+        </div>
+        <div class="difficulty">
+            <div class="difficulty__level">
+                <input type="radio" id="beginner" name="difficulty" value="beginner">
+                <label for="beginner">Новичок - поле 10х10, 10 мин</label>
+            </div>
+            <div class="difficulty__level">
+                <input type="radio" id="amateur" name="difficulty" value="amateur" checked>
+                <label for="amateur">Любитель - поле 16х16, 40 мин</label>
+            </div>
+            <div class="difficulty__level">
+                <input type="radio" id="professional" name="difficulty" value="professional">
+                <label for="professional">Профессионал - поле 16х30, 99 мин</label>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="footer">
+
+        <div class="footer__copyright">
+            &copy; 2023 Pet проект: Игра "Сапёр". Все права защищены.
+        </div>
+
+    </footer>
+
     <div id="minesweeper">
 
-        <div id="edge-top"></div>
-
         <div class="top_wrapper">
-            <div id="edge-top-left"></div>
+
             <div id="top">
                 <div class="top__inner start">
                     <div class="counterMines">
@@ -38,22 +96,14 @@
                     </div>
                 </div>
             </div>
-            <div id="edge-top-right"></div>
-        </div>
 
-        <div id="edge-center"></div>
+        </div>
 
         <div class="board_wrapper">
 
-            <div id="edge-board-left"></div>
-
-            <div id="board"></div>
-
-            <div id="edge-board-right"></div>
+            <div id="board" class="amateur"></div>
 
         </div>
-
-        <div id="edge-bottom"></div>
 
     </div>
 </body>

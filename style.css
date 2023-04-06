@@ -12,279 +12,330 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: 'Montserrat', sans-serif;
+  background-color: #f9f9f9;
 }
 
+/* Оглавление страницы */
+.header {
+  padding: 20px 0;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: #bbdefb;
+  text-align: center;
+}
+
+.header__logo {
+  font-size: 32px;
+}
+
+/* Левая сторона страницы - Описание игры */
+.left-side {
+  padding: 80px 20px;
+  width: 20%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 10;
+  background-color: #efeeee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.description {
+  text-align: justify;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+/* Правая сторона страницы - Выбор уровня сложности */
+.right-side {
+  padding: 80px 20px;
+  width: 20%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  background-color: #efeeee;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.right-side__tittle {
+  font-size: 20px;
+  margin-bottom: 60px;
+}
+
+.difficulty {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: justify;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.difficulty__level {
+  margin-bottom: 30px;
+}
+
+.disable {
+  pointer-events: none;
+}
+
+/* Правая сторона страницы - Выбор уровня сложности */
+.footer {
+  padding: 20px 0;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: #bbdefb;
+  text-align: center;
+}
+
+/* Игра сапёр */
 #minesweeper {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  padding: 14px;
+  background-color: silver;
+  border-left: 3px solid white;
+  border-top: 3px solid white;
+  border-right: 3px solid grey;
+  border-bottom: 3px solid grey;
 }
-#edge-top {
-  width: 100%;
-  height: 20px;
-  background-image: url(./images/edge_top.png);
-  background-size: 100% 20px;
-}
+
 .top_wrapper {
   width: 100%;
   display: flex;
   align-items: center;
 }
-#edge-top-left {
-  width: 14px;
-  height: 35px;
-  flex: 1 1 auto;
-  background-image: url(./images/edge_top_left.png);
-  background-size: 14px 35px;
-}
-#edge-top-right {
-  width: 19.5px;
-  height: 35px;
-  flex: 1 1 auto;
-  background-image: url(./images/edge_top_right.png);
-  background-size: 19.5px 35px;
-}
+
 #top {
-  padding: 4px 6px 5px;
-  /* width: 100%; */
+  padding: 5px 6px;
+  margin-bottom: 14px;
   flex: 999 1 auto;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: silver;
+  border-left: 3px solid grey;
+  border-top: 3px solid grey;
+  border-right: 3px solid white;
+  border-bottom: 3px solid white;
 }
-#edge-center {
-  width: 100%;
-  height: 20px;
-  background-image: url(./images/edge_center.png);
-  background-size: 100% 20px;
-}
-#edge-board-left {
-  width: 14px;
-  height: 384px;
-  flex: 1 1 auto;
-  background-image: url(./images/edge_board_left.png);
-  background-size: 14px 384px;
-}
-#edge-board-right {
-  width: 19px;
-  height: 384px;
-  flex: 1 1 auto;
-  background-image: url(./images/edge_board_right.png);
-  background-size: 19px 384px;
-}
-#edge-bottom {
-  width: 100%;
-  height: 20px;
-  background-image: url(./images/edge_bottom.png);
-  background-size: 100% 20px;
-}
+
 .top__inner {
   flex: 1 1 auto;
   display: block;
 }
 
+/* Смайлик */
+.smile {
+  width: 39px;
+  height: 39px;
+  margin: auto;
+  cursor: pointer;
+  background: url(./images/Sprite.png);
+  background-size: 229.5px 126px;
+}
+
+.smile.default {
+  background-position: 0px -36px;
+}
+
+.smile.default-down {
+  background-position: -40.5px -36px;
+}
+
+.smile.lose {
+  background-position: -162px -36px;
+}
+
+.smile.win {
+  background-position: -121.5px -36px;
+}
+
+.smile.scare {
+  background-position: -81px -36px;
+}
+
+/* Таймер и счётчик мин */
+.stopwatch {
+  height: 34.5px;
+  float: right !important;
+}
+
 .counterMines {
-  height: 23px;
+  height: 34.5px;
   display: block;
   float: left !important;
   align-items: center;
 }
 
-.smile {
-  width: 26px;
-  height: 26px;
-  margin: auto;
-  cursor: pointer;
-}
-
-.smile.default {
-  background-image: url(./images/smile_default.png);
-  background-size: cover;
-}
-
-.smile.default-down {
-  background-image: url(./images/smile_default_down.png);
-  background-size: cover;
-}
-
-.smile.lose {
-  background-image: url(./images/smile_lose.png);
-  background-size: cover;
-}
-
-.smile.win {
-  background-image: url(./images/smile_win.png);
-  background-size: cover;
-}
-
-.smile.scare {
-  background-image: url(./images/smile_scare.png);
-  background-size: cover;
-}
-
-.stopwatch {
-  height: 23px;
-  float: right !important;
-}
-
 .number {
-  width: 13px;
-  height: 23px;
+  width: 19.5px;
+  height: 34.5px;
   float: left !important;
+  background: url(./images/Sprite.png);
+  background-size: 229.5px 126px;
 }
 
 .num0 {
-  background-image: url(./images/number_null.png);
-  background-size: cover;
+  background-position: -189px 0px;
 }
 
 .num1 {
-  background-image: url(./images/number_one.png);
-  background-size: cover;
+  background-position: 0px 0px;
 }
 
 .num2 {
-  background-image: url(./images/number_two.png);
-  background-size: cover;
+  background-position: -21px 0px;
 }
 
 .num3 {
-  background-image: url(./images/number_three.png);
-  background-size: cover;
+  background-position: -42px 0px;
 }
 
 .num4 {
-  background-image: url(./images/number_four.png);
-  background-size: cover;
+  background-position: -63px 0px;
 }
 
 .num5 {
-  background-image: url(./images/number_five.png);
-  background-size: cover;
+  background-position: -84px 0px;
 }
 
 .num6 {
-  background-image: url(./images/number_six.png);
-  background-size: cover;
+  background-position: -105px 0px;
 }
 
 .num7 {
-  background-image: url(./images/number_seven.png);
-  background-size: cover;
+  background-position: -126px 0px;
 }
 
 .num8 {
-  background-image: url(./images/number_eight.png);
-  background-size: cover;
+  background-position: -147px 0px;
 }
 
 .num9 {
-  background-image: url(./images/number_nine.png);
-  background-size: cover;
+  background-position: -168px 0px;
 }
 
 .num- {
-  background-image: url(./images/number_minus.png);
-  background-size: cover;
+  background-position: -210px 0px;
 }
 
+/* Игровое поле */
 .board_wrapper {
   width: 100%;
   display: flex;
   align-items: center;
+  border-left: 3px solid grey;
+  border-top: 3px solid grey;
+  border-right: 3px solid white;
+  border-bottom: 3px solid white;
 }
 
 #board {
   flex: 999 1 auto;
   display: grid;
+}
+
+.beginner {
+  grid-template-columns: repeat(10, 24px);
+}
+
+.amateur {
   grid-template-columns: repeat(16, 24px);
 }
 
+.professional {
+  grid-template-columns: repeat(30, 24px);
+}
+
+/* Фон ячеек на игровом поле */
 .cell {
-  /* border: 1px solid #000; */
   width: 24px;
   height: 24px;
-  /* display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    font-weight: bold; */
   cursor: pointer;
+  background: url(./images/Sprite.png);
+  background-size: 229.5px 126px;
 }
 
 .cell.closed {
-  background-image: url(./images/closed.png);
-  background-size: cover;
+  background-position: 0px -76.5px;
 }
 
 .cell.opened {
-  background-image: url(./images/opened.png);
-  background-size: cover;
+  background-position: -25.5px -76.5px;
 }
 
 .cell.min_reveal {
-  background-image: url(./images/min_reveal.png);
-  background-size: cover;
+  background-position: -127.5px -76.5px;
 }
 
 .cell.min_explosion {
-  background-image: url(./images/min_explosion.png);
-  background-size: cover;
+  background-position: -153px -76.5px;
 }
 
 .cell.min_error {
-  background-image: url(./images/min_error.png);
-  background-size: cover;
+  background-position: -178.5px -76.5px;
 }
 
 .cell.flag_true {
-  background-image: url(./images/flag.png);
-  background-size: cover;
+  background-position: -51px -76.5px;
 }
 
 .cell.question {
-  background-image: url(./images/question.png);
-  background-size: cover;
+  background-position: -76.5px -76.5px;
+}
+
+.cell.question-down {
+  background-position: -102px -76.5px;
 }
 
 .cell.number_mines_1 {
-  background-image: url(./images/number_mines_one.png);
-  background-size: contain;
+  background-position: 0px -102px;
 }
 
 .cell.number_mines_2 {
-  background-image: url(./images/number_mines_two.png);
-  background-size: contain;
+  background-position: -25.5px -102px;
 }
 
 .cell.number_mines_3 {
-  background-image: url(./images/number_mines_three.png);
-  background-size: contain;
+  background-position: -51px -102px;
 }
 
 .cell.number_mines_4 {
-  background-image: url(./images/number_mines_four.png);
-  background-size: contain;
+  background-position: -76.5px -102px;
 }
 
 .cell.number_mines_5 {
-  background-image: url(./images/number_mines_five.png);
-  background-size: contain;
+  background-position: -102px -102px;
 }
 
 .cell.number_mines_6 {
-  background-image: url(./images/number_mines_six.png);
-  background-size: contain;
+  background-position: -127.5px -102px;
 }
 
 .cell.number_mines_7 {
-  background-image: url(./images/number_mines_seven.png);
-  background-size: contain;
+  background-position: -153px -102px;
 }
 
 .cell.number_mines_8 {
-  background-image: url(./images/number_mines_eight.png);
-  background-size: contain;
+  background-position: -178.5px -102px;
 }

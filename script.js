@@ -1,5 +1,7 @@
-const boardSize = 16;
-const numberMines = 40;
+let boardRow = 16;
+let boardColumn = 16;
+
+let numberMines = 40;
 
 let board = [];
 let mineLocations = [];
@@ -23,17 +25,7 @@ let elemSmile = document.getElementById("smile");
 elemSmile.addEventListener("mousedown", () => {
     elemSmile.className = "smile default-down";
 });
-elemSmile.addEventListener("mouseup", () => {
-    firstRenderBoard();
-    clearStopwatch();
-    renderCounterMines();
-    changeNumber(000, pos3);
-    changeNumber(000, pos4);
-    changeNumber(000, pos5);
-    gameOver = false;
-    gameStart = false;
-    elemSmile.className = "smile default";
-});
+elemSmile.addEventListener("mouseup", reloadGame);
 
 // Ищем все элементы содержищие цифры
 let pos0 = document.getElementById("pos_0");
@@ -42,6 +34,15 @@ let pos2 = document.getElementById("pos_2");
 let pos3 = document.getElementById("pos_3");
 let pos4 = document.getElementById("pos_4");
 let pos5 = document.getElementById("pos_5");
+
+//Элемент с радио кнопками
+let radioBtns = document.querySelector(".difficulty");
+console.log(radioBtns)
+radioBtns.addEventListener("change", (event) => {
+    if (event.target.name === "difficulty") {
+        changeDifficulty(event.target.value);
+    }
+});
 
 // Отображаем количество мин в счётчике мин
 function renderCounterMines() {
@@ -54,9 +55,10 @@ renderCounterMines();
 
 // Инициализируем игровое поле
 function initBoard() {
-    for (let i = 0; i < boardSize; i++) {
+    board = [];
+    for (let i = 0; i < boardRow; i++) {
         board[i] = [];
-        for (let j = 0; j < boardSize; j++) {
+        for (let j = 0; j < boardColumn; j++) {
             board[i][j] = {
                 isMine: false,
                 isFlagged: false,
@@ -73,8 +75,8 @@ function placeMines(event) {
     for (let i = 0; i < numberMines; i++) {
         let row, column;
         do {
-            row = Math.floor(Math.random() * boardSize);
-            column = Math.floor(Math.random() * boardSize);
+            row = Math.floor(Math.random() * boardRow);
+            column = Math.floor(Math.random() * boardColumn);
         } while (board[row][column].isMine || board[row][column].isRevealed);
         board[row][column].isMine = true;
         mineLocations.push([row, column]);
@@ -89,7 +91,7 @@ function countNeighborMines(row, column) {
             if (i === 0 && j === 0) continue;
             const r = row + i;
             const c = column + j;
-            if (r < 0 || r >= boardSize || c < 0 || c >= boardSize) continue;
+            if (r < 0 || r >= boardRow || c < 0 || c >= boardColumn) continue;
             if (board[r][c].isMine) count++;
         }
     }
@@ -98,8 +100,8 @@ function countNeighborMines(row, column) {
 
 // Записываем в ячейку количество мин, окружающие её
 function countAllNeighborMines() {
-    for (let i = 0; i < boardSize; i++) {
-        for (let j = 0; j < boardSize; j++) {
+    for (let i = 0; i < boardRow; i++) {
+        for (let j = 0; j < boardColumn; j++) {
             board[i][j].numberMines = countNeighborMines(i, j);
         }
     }
@@ -141,97 +143,101 @@ function firstClickBoard(event) {
     })
     stopwatch();
     gameStart = true;
+    radioBtns.classList.add("disable");
 }
 
+function reloadGame() {
+    firstRenderBoard();
+    clearStopwatch();
+    renderCounterMines();
+    changeNumber(000, pos3);
+    changeNumber(000, pos4);
+    changeNumber(000, pos5);
+    gameOver = false;
+    gameStart = false;
+    elemSmile.className = "smile default";
+    radioBtns.classList.remove("disable");
+}
+
+let leftClick, rightClick;
 // Обрабатываем нажатие кнопки мыши на поле
 function downClickCellBoard(event) {
     event.preventDefault();
     if (gameOver) return;
+    if (event.target.classList.contains("flag_true")) return;
+    if (event.button == 2) rightClick = true;
     if (event.button == 0) {
+        elemSmile.className = "smile scare";
         if (event.target.dataset.isRevealed === "true"
             && event.target.dataset.numberMines !== "0"
             && !event.target.classList.contains("mine_true")
             && !event.target.classList.contains("flag_true")
             && !event.target.classList.contains("question")) {
+            leftClick = true;
             revealHideNeighborCells(event, true, false);
         }
-        elemSmile.className = "smile scare";
         elemBoard.addEventListener("mouseover", overClickCellBoard);
         elemBoard.addEventListener("mouseout", outClickCellBoard);
+        if (event.target.classList.contains("question")) {
+            event.target.classList.remove("question");
+            event.target.classList.add("question-down");
+            return;
+        }
         event.target.classList.remove("closed");
         event.target.classList.add("opened");
     }
 }
 
-// Временно отображает и скрывает соседние ячейки при движении по ячейкам содержащие номера
-function revealHideNeighborCells(event, toggle, revealing) {
-    let countFlag = 0;
-    let countQuestion = 0;
-    let row = +event.target.dataset.row;
-    let column = +event.target.dataset.column;
-    for (let i = -1; i <= 1; i++) {
-        for (let j = -1; j <= 1; j++) {
-            if (i === 0 && j === 0) continue;
-            const r = row + i;
-            const c = column + j;
-            if (r < 0 || r >= boardSize || c < 0 || c >= boardSize) continue;
-            let localElem = document.querySelector(`[data-row="${r}"][data-column="${c}"]`);
-            if (localElem.classList.contains("flag_true")) countFlag++;
-            if (localElem.classList.contains("question")) countQuestion++;
-            if (localElem.dataset.isRevealed === "false") {
-                if (!revealing) {
-                    if (toggle) {
-                        if (localElem.classList.contains("flag_true")) continue;
-                        if (localElem.classList.contains("question")) continue;
-                        localElem.classList.remove("closed");
-                        localElem.classList.add("opened");
-                    } else {
-                        if (localElem.classList.contains("flag_true")) continue;
-                        if (localElem.classList.contains("question")) continue;
-                        localElem.classList.remove("opened");
-                        localElem.classList.add("closed");
-                    }
-                } else {
-                    if (localElem.classList.contains("flag_true")) continue;
-                    if (localElem.classList.contains("question")) continue;
-                    revealCell(localElem);
-                }
-            };
-        }
-    }
-    return [countFlag, countQuestion];
-}
-
 // Обрабатываем отжатие кнопки мыши на поле
 function upClickCellBoard(event) {
-    let countFlag, countQuestion;
-    
+    let countFlag;
     if (gameOver) return;
     elemSmile.className = "smile default";
     elemBoard.removeEventListener("mouseover", overClickCellBoard);
     elemBoard.removeEventListener("mouseout", outClickCellBoard);
     if (event.target.classList.contains("cell")) {
+        // Первое нажатие на поле
         if (!gameStart) firstClickBoard(event);
+        // Нажатие на ячейку с флагом левой кнопкой
         if (event.target.classList.contains("flag_true") && event.button == 0) return;
-        if (event.target.classList.contains("question") && event.button == 0) return;
+        // Нажатие на открытую ячейку с цифрой левой кнопкой мыши
         if (event.target.dataset.isRevealed === "true"
             && event.target.dataset.numberMines !== "0"
             && !event.target.classList.contains("mine_true")
             && !event.target.classList.contains("flag_true")
             && !event.target.classList.contains("question")) {
-            [countFlag, countQuestion] = revealHideNeighborCells(event, false);
+            countFlag = revealHideNeighborCells(event, false);
         }
-        if (+event.target.dataset.numberMines == countFlag && countQuestion == 0) {
+        // Нажатие на открытую ячейку с цифрой левой и правой кнопкой мыши
+        if (+event.target.dataset.numberMines == countFlag && leftClick && rightClick) {
+            leftClick = false;
+            rightClick = false;
             revealHideNeighborCells(event, false, true)
+            return;
         }
+        leftClick = false;
+        rightClick = false;
+        // Открытие ячейки
         if (event.button == 0) revealCell(event.target);
-        if (!event.target.classList.contains("opened") && event.button == 2) flaggedCell(event);
+        // Нажатие правой кнопкой мыши на закрытую ячейку
+        if (event.target.dataset.isRevealed === "false" && event.button == 2) flaggedCell(event);
     }
 }
 // Обрабатываем движение мыши на поле - над ячейкой
 function overClickCellBoard(event) {
-    event.target.classList.remove("closed");
-    event.target.classList.add("opened");
+    // Если вопрос
+    if (event.target.classList.contains("question")) {
+        event.target.classList.remove("question");
+        event.target.classList.add("question-down");
+        return;
+    }
+    // Если приоткрыт
+    if (event.target.dataset.isRevealed === "false" && !event.target.classList.contains("flag_true")) {
+        event.target.classList.remove("closed");
+        event.target.classList.add("opened");
+        return;
+    }
+    // Если открыт и там цифра
     if (event.target.dataset.isRevealed === "true"
         && event.target.dataset.numberMines !== "0"
         && !event.target.classList.contains("mine_true")
@@ -239,14 +245,23 @@ function overClickCellBoard(event) {
         && !event.target.classList.contains("question")) {
         revealHideNeighborCells(event, true, false);
     }
-
 }
+
 // Обрабатываем движение мыши на поле - уход с ячейки
 function outClickCellBoard(event) {
-    if (event.target.dataset.isRevealed === "false") {
+    // Если вопрос
+    if (event.target.classList.contains("question-down")) {
+        event.target.classList.remove("question-down");
+        event.target.classList.add("question");
+        return;
+    }
+    // Если просто закрыт (приоткрытие)
+    if (event.target.dataset.isRevealed === "false" && !event.target.classList.contains("flag_true")) {
         event.target.classList.remove("opened");
         event.target.classList.add("closed");
+        return;
     }
+    // Если открыт и там цифра
     if (event.target.dataset.isRevealed === "true"
         && event.target.dataset.numberMines !== "0"
         && !event.target.classList.contains("mine_true")
@@ -263,49 +278,123 @@ function flaggedCell(event) {
         event.target.classList.remove("flag_false");
         event.target.classList.add("flag_true");
         countFlaggedCells();
-        return
+        return;
     };
     if (event.target.classList.contains("flag_true")) {
         event.target.classList.remove("flag_true");
         event.target.classList.add("flag_false");
         event.target.classList.add("question");
         countFlaggedCells();
-        return
+        return;
     };
     if (event.target.classList.contains("question")) {
         event.target.classList.remove("question");
         event.target.classList.add("closed");
-        return
+        return;
     };
 }
 
 // Обрабатываем левый клик мыши
 function revealCell(elem) {
     if (elem.classList.contains("cell")) {
+        //Клик по мине
         if (!gameOver && elem.classList.contains("mine_true")) {
             gameOver = true;
+            elem.classList.remove("question-down");
             elem.classList.add("min_explosion");
             revealAllCellWithMine();
             clearStopwatch();
             return;
         }
-
+        // Клик не по мине
         elem.classList.remove("closed");
         elem.dataset.isRevealed = true;
-
-        if (elem.dataset.numberMines === "0") cascadingRevealCells(elem);
-
-        function setNumberCellBackground(elem, number) {
-            if (number === "0") {
-                elem.classList.add("opened");
-                return;
-            }
-            elem.classList.add(`number_mines_${number}`);
+        // Без цифр - запускается рекурсия
+        if (elem.dataset.numberMines === "0") {
+            elem.classList.add("opened");
+            cascadeRevealingCells(elem);
         }
-        setNumberCellBackground(elem, elem.dataset.numberMines);
+        // С цифрой - просто открываем
+        if (elem.dataset.numberMines !== "0") {
+            elem.classList.remove("opened");
+            elem.classList.remove("question-down");
+            elem.classList.add(`number_mines_${elem.dataset.numberMines}`);
+        }
     }
     gameWin();
 }
+
+// Временно отображает и скрывает соседние ячейки при движении по ячейкам содержащие номера
+function revealHideNeighborCells(event, toggle, revealing) {
+    let countFlag = 0;
+    let row = +event.target.dataset.row;
+    let column = +event.target.dataset.column;
+    for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+            if (i === 0 && j === 0) continue;
+            const r = row + i;
+            const c = column + j;
+            if (r < 0 || r >= boardRow || c < 0 || c >= boardColumn) continue;
+            let localElem = document.querySelector(`[data-row="${r}"][data-column="${c}"]`);
+            if (localElem.classList.contains("flag_true")) countFlag++;
+            if (localElem.dataset.isRevealed === "false") {
+                if (!revealing) {
+                    if (toggle) {
+                        if (localElem.classList.contains("flag_true")) continue;
+                        if (localElem.classList.contains("question")) {
+                            localElem.classList.remove("question");
+                            localElem.classList.add("question-down");
+                            continue;
+                        };
+                        localElem.classList.remove("closed");
+                        localElem.classList.add("opened");
+                    } else {
+                        if (localElem.classList.contains("flag_true")) continue;
+                        if (localElem.classList.contains("question-down")) {
+                            localElem.classList.remove("question-down");
+                            localElem.classList.add("question");
+                            continue;
+                        }
+                        localElem.classList.remove("opened");
+                        localElem.classList.add("closed");
+                    }
+                } else {
+                    if (localElem.classList.contains("flag_true")) continue;
+                    revealCell(localElem);
+                }
+            };
+        }
+    }
+    return countFlag;
+}
+
+// Рекурсивное открытие соседних ячеек при нажатии на пустую ячейку (без мин и цифр)
+function cascadeRevealingCells(elem) {
+    for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+            if (i === 0 && j === 0) continue;
+            const r = +elem.dataset.row + i;
+            const c = +elem.dataset.column + j;
+            if (r < 0 || r >= boardRow || c < 0 || c >= boardColumn) continue;
+            if (board[r][c].isMine === true) return;
+            if (board[r][c].isRevealed) continue;
+            let newElem = document.querySelector(`[data-row="${r}"][data-column="${c}"]`);
+            board[r][c].isRevealed = true;
+            newElem.dataset.isRevealed = true;
+            newElem.classList.remove("closed");
+            newElem.classList.remove("question");
+            if (board[r][c].numberMines !== 0) {
+                newElem.classList.add(`number_mines_${newElem.dataset.numberMines}`);
+                continue;
+            };
+            if (board[r][c].numberMines == 0) {
+                newElem.classList.add("opened");
+                cascadeRevealingCells(newElem);
+            }
+        }
+    }
+}
+
 // Показываем карту мин (игра проиграна)
 function revealAllCellWithMine() {
     cellsWithMine = document.querySelectorAll(".mine_true, .flag_true");
@@ -321,43 +410,11 @@ function revealAllCellWithMine() {
         }
     });
     elemSmile.className = "smile lose";
+    gameStart = false;
+    radioBtns.classList.remove("disable");
 }
 
-// Рекурсивное открытие соседних ячеек при нажатии на пустую ячейку (без мин и цифр)
-function cascadingRevealCells(elem) {
-    // if (elem.classList.contains("mine_true")) return;
-    // if (elem.dataset.numberMines !== "0") return;
-    let row = +elem.dataset.row;
-    let column = +elem.dataset.column;
-    for (let i = -1; i <= 1; i++) {
-        for (let j = -1; j <= 1; j++) {
-            if (i === 0 && j === 0) continue;
-            const r = row + i;
-            const c = column + j;
-            if (r < 0 || r >= boardSize || c < 0 || c >= boardSize) continue;
-            if (board[r][c].isMine === true) return;
-            if (board[r][c].numberMines !== 0) {
-                if (board[r][c].isRevealed) continue;
-                board[r][c].isRevealed = true;
-                let elem = document.querySelector(`[data-row="${r}"][data-column="${c}"]`);
-                elem.dataset.isRevealed = true;
-                elem.classList.remove("closed");
-                elem.classList.add(`number_mines_${elem.dataset.numberMines}`);
-                continue;
-            };
-            if (board[r][c].numberMines == 0) {
-                if (board[r][c].isRevealed) continue;
-                board[r][c].isRevealed = true;
-                let elem = document.querySelector(`[data-row="${r}"][data-column="${c}"]`);
-                elem.dataset.isRevealed = true;
-                elem.classList.remove("closed");
-                elem.classList.add("opened");
-                cascadingRevealCells(elem);
-            }
-        }
-    }
-}
-
+// Сравниваем количество закрытых ячеек с количеством мин (победа в игре)
 function gameWin() {
     // let countClosedCells = document.querySelectorAll(".closed").length;
     let countRevealedCells = document.querySelectorAll('[data-is-revealed="true"]').length;
@@ -383,14 +440,12 @@ function countFlaggedCells() {
 let timer;
 function stopwatch() {
     let currentTime = 0;
-
     function start() {
         if (currentTime == 998) {
             clearInterval(timer);
         }
         currentTime++;
         let time = fractionTime(currentTime);
-
         changeNumber(time[0], pos3);
         changeNumber(time[1], pos4);
         changeNumber(time[2], pos5);
@@ -425,4 +480,29 @@ function fractionTime(value) {
 // Меняем класс элемента с цифрой (счётчик мин и таймер)
 function changeNumber(number, elem) {
     elem.className = `number num${number}`
+}
+
+//Меняем сложность игры
+function changeDifficulty(value) {
+    switch (value) {
+        case "beginner":
+            boardRow = 10;
+            boardColumn = 10;
+            numberMines = 10;
+            elemBoard.className = "beginner";
+            break;
+        case "amateur":
+            boardRow = 16;
+            boardColumn = 16;
+            numberMines = 40;
+            elemBoard.className = "amateur";
+            break;
+        case "professional":
+            boardRow = 16;
+            boardColumn = 30;
+            numberMines = 99;
+            elemBoard.className = "professional";
+            break;
+    }
+    reloadGame();
 }
